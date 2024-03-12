@@ -9,3 +9,6 @@ sky:
   img:
     defalutLocation: "G:\\javaex\\cangqiong\\img\\"
     format: .jpg
+  redis:
+    port: 6379
+    host: localhost

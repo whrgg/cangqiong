@@ -11,6 +11,9 @@ import com.sky.vo.DishVO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
 
 @Mapper
 public interface DishMapper {
@@ -27,4 +30,15 @@ public interface DishMapper {
     void insert(Dish dish);
 
     Page<DishVO> queryPage(DishPageQueryDTO dishPageQueryDTO);
+
+    void removeBatchIds(List<Long> ids);
+
+
+    @Select("select *from dish where id=#{id}")
+    Dish getById(Long id);
+
+    @AutoFill(OperationType.UPDATE)
+    @Update("update dish set category_id=#{categoryId},description=#{description}," +
+            "image=#{image},name=#{name},price=#{price},status=#{status} where id=#{id}")
+    void updateById(Dish dish);
 }
