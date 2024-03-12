@@ -75,12 +75,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         employee.setStatus(StatusConstant.ENABLE);
 
-
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
-
-        employee.setCreateUser(BaseContext.getCurrentId());
-        employee.setUpdateUser(BaseContext.getCurrentId());
+//
+//        employee.setCreateTime(LocalDateTime.now());
+//        employee.setUpdateTime(LocalDateTime.now());
+//
+//        employee.setCreateUser(BaseContext.getCurrentId());
+//        employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.save(employee);
 
@@ -91,7 +91,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void updateStatus(Integer id, Integer status) {
-        employeeMapper.updateStatus(id,status);
+        Employee employee = new Employee();
+        employee.setStatus(status);
+        employee.setId(Long.valueOf(id));
+        employeeMapper.updateEmployeeById(employee);
     }
 
     @Override

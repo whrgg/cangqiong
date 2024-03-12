@@ -6,10 +6,10 @@
         update employee
         <set>
             <if test="name!=null and name!=''">
-                name =#{name},
+                name = #{name},
             </if>
             <if test="password!=null and password!=''">
-                password=#{password},
+                password = #{password},
             </if>
             <if test="username!=null and username!=''">
                 username = #{username},
@@ -23,8 +23,8 @@
             <if test="idNumber!=null and idNumber!=''">
                 id_number=#{idNumber},
             </if>
-            <if test="status!=null and status!=''">
-                status=#{status},
+            <if test="status != null ">
+                status = #{status},
             </if>
 
             <if test="updateTime!=null">
