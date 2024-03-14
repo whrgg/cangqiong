@@ -38,7 +38,7 @@ public interface DishMapper {
     Dish getById(Long id);
 
     @AutoFill(OperationType.UPDATE)
-    @Update("update dish set category_id=#{categoryId},description=#{description}," +
-            "image=#{image},name=#{name},price=#{price},status=#{status} where id=#{id}")
     void updateById(Dish dish);
+
+    List<Dish> list(Dish dish);
 }

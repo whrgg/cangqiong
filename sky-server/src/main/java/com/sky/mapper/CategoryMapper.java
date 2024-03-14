@@ -55,4 +55,7 @@ public interface CategoryMapper {
 
     @Select("select name from category where id=#{categoryId}")
     String getCategoryNameById(Long categoryId);
+
+    @Select("select type from category where id=#{id} ")
+    Integer getIdByType(Long id);
 }

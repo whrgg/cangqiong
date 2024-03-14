@@ -10,8 +10,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 分类管理
@@ -24,6 +28,8 @@ public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 新增分类
@@ -61,6 +67,8 @@ public class CategoryController {
     public Result<String> deleteById(Long id){
         log.info("删除分类：{}", id);
         categoryService.deleteById(id);
+        Set keys = redisTemplate.keys("category_*");
+        redisTemplate.delete(keys);
         return Result.success();
     }
 
@@ -72,6 +80,13 @@ public class CategoryController {
     @PutMapping
     @ApiOperation("修改分类")
     public Result<String> update(@RequestBody CategoryDTO categoryDTO){
+
+        Integer typeById = categoryService.getTypeById(categoryDTO.getId());
+
+        Set keys = redisTemplate.keys("category_*");
+
+        redisTemplate.delete(keys);
+
         categoryService.update(categoryDTO);
         return Result.success();
     }
@@ -86,6 +101,10 @@ public class CategoryController {
     @ApiOperation("启用禁用分类")
     public Result<String> startOrStop(@PathVariable("status") Integer status, Long id){
         categoryService.startOrStop(status,id);
+
+        Set keys = redisTemplate.keys("category_*");
+
+        redisTemplate.delete(keys);
         return Result.success();
     }
 
