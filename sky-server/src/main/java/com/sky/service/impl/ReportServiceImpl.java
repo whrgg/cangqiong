@@ -76,6 +76,7 @@ public class ReportServiceImpl implements ReportService {
             map1.put("end",endTime);
 
             Map map =new HashMap();
+            map1.put("end",endTime);
             Integer allUser = orderMapper.selectUser(map);
             Integer newUser = orderMapper.selectUser(map1);
             allUsers.add(allUser);
