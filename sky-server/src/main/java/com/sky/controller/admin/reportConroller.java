@@ -3,6 +3,7 @@ package com.sky.controller.admin;
 
 import com.sky.result.Result;
 import com.sky.service.ReportService;
+import com.sky.vo.OrderReportVO;
 import com.sky.vo.TurnoverReportVO;
 import com.sky.vo.UserReportVO;
 import io.swagger.models.auth.In;
@@ -21,10 +22,12 @@ import java.time.LocalDate;
 public class reportConroller {
 
     @Autowired
-    private ReportService reportService;;
+    private ReportService reportService;
+    ;
 
     /**
      * 营业额统计
+     *
      * @param begin
      * @param end
      * @return
@@ -32,19 +35,28 @@ public class reportConroller {
     @GetMapping("/turnoverStatistics")
     public Result<TurnoverReportVO> turnoverStatistics(
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate begin,
-            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end){
+            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) {
 
 
-
-        return Result.success(reportService.getTurnoverStatistics(begin,end));
+        return Result.success(reportService.getTurnoverStatistics(begin, end));
     }
 
     @GetMapping("/userStatistics")
     public Result<UserReportVO> UserStatistics(
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate begin,
-            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end){
+            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) {
 
 
-        return Result.success(reportService.getUserStatistics(begin,end));
+        return Result.success(reportService.getUserStatistics(begin, end));
     }
+
+    @GetMapping("/ordersStatistics")
+    public Result<OrderReportVO> OrderStatistics(
+            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate begin,
+            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) {
+
+        return Result.success(reportService.getOrderStatistics(begin, end));
+
+    }
+
 }

@@ -47,4 +47,6 @@ public interface OrderMapper {
     Double sumByMap(Map map);
 
     Integer selectUser(Map map);
+
+    Integer orderCount(Map map);
 }
