@@ -54,5 +54,6 @@ public interface OrderMapper {
 
     List<GoodsSalesDTO> getTop10(LocalDateTime begin, LocalDateTime end);
 
-
+    @Select("select count(id) from orders where status = #{status}")
+    Integer countStatus(Integer toBeConfirmed);
 }
