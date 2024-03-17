@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.sky.controller.admin.WebSocketServer;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
+import com.sky.entity.Orders;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.OrderService;
@@ -25,7 +26,6 @@ import java.util.Map;
 @RestController("userOrderController")
 @RequestMapping("/user/order")
 @Slf4j
-@Api(tags = "C端订单接口")
 public class OrderController {
 
     @Autowired
@@ -66,22 +66,41 @@ public class OrderController {
         return Result.success(orderPaymentVO);
     }
 
+    //再来一单
     @PostMapping("/repetition/{id}")
     public Result repetition(@PathVariable Long id){
         orderService.reptition(id);
         return Result.success();
     }
 
+    //催单
     @GetMapping("/reminder/{id}")
     public Result reminder(@PathVariable Long id){
         orderService.reminder(id);
         return Result.success();
     }
 
+    //历史订单
     @GetMapping("/historyOrders")
     public Result<PageResult> page(int page, int pageSize, Integer status) {
         PageResult pageResult = orderService.pageQuery4User(page, pageSize, status);
         return Result.success(pageResult);
     }
+
+    @PutMapping("/cancel/{id}")
+    public Result cancel(@PathVariable Long id) throws Exception {
+        orderService.cancel(id);
+        return Result.success();
+    }
+
+    @GetMapping("/orderDetail/{id}")
+    public Result<OrderVO> getOders(@PathVariable Long id){
+
+        OrderVO orders = orderService.selectOrdersById(id);
+
+        return Result.success(orders);
+    }
+
+
 
 }

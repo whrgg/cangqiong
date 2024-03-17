@@ -1,10 +1,12 @@
 package com.sky.service.impl;
 
+import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.ShoppingCartDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.Setmeal;
 import com.sky.entity.ShoppingCart;
+import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.mapper.ShoppingCartMapper;
@@ -77,5 +79,26 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public void cleanShoppingCart() {
         Long userId = BaseContext.getCurrentId();
         shoppingCartMapper.deleteByUserId(userId);
+    }
+
+    @Override
+    public void subShoppingCart(ShoppingCartDTO shoppingCartDTO) {
+        ShoppingCart shoppingCart =new ShoppingCart();
+        BeanUtils.copyProperties(shoppingCartDTO,shoppingCart);
+        Long userId = BaseContext.getCurrentId();
+        shoppingCart.setUserId(userId);
+        List<ShoppingCart> list = shoppingCartMapper.list(shoppingCart);
+
+        if(list!=null &&list.size()>0) {
+            ShoppingCart cart = list.get(0);
+            if(cart.getNumber()-1==0) {
+                if(shoppingCartDTO.getSetmealId()!=null) {
+                    shoppingCartMapper.deleteByDishOrSetmealId(shoppingCart);
+                }
+                shoppingCartMapper.deleteByDishOrSetmealId(shoppingCart);
+            }
+            cart.setNumber(cart.getNumber() - 1);
+            shoppingCartMapper.upateNumberById(cart);
+        }
     }
 }

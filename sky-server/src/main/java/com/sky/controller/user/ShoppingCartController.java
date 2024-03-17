@@ -38,4 +38,9 @@ public class ShoppingCartController {
         return Result.success();
     }
 
+    @PostMapping("/sub")
+    public Result sub(@RequestBody ShoppingCartDTO shoppingCartDTO){
+        service.subShoppingCart(shoppingCartDTO);
+        return Result.success();
+    }
 }

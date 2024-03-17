@@ -23,6 +23,7 @@ import com.sky.vo.OrderVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -231,6 +232,19 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void reptition(Long id) {
 
+
+        List<OrderDetail> orderDetails = orderDetailMapper.getByOrderId(id);
+
+        List<ShoppingCart> shoppingCartList = orderDetails.stream().map(x -> {
+            ShoppingCart shoppingCart = new ShoppingCart();
+
+            BeanUtils.copyProperties(x, shoppingCart, "id");
+            shoppingCart.setUserId(BaseContext.getCurrentId());
+            shoppingCart.setCreateTime(LocalDateTime.now());
+            return shoppingCart;
+        }).collect(Collectors.toList());
+
+        shoppingCartMapper.insertBatch(shoppingCartList);
     }
 
     @Override
@@ -262,6 +276,58 @@ public class OrderServiceImpl implements OrderService {
             }
         }
         return new PageResult(page.getTotal(), list);
+    }
+
+    @Override
+    public void cancel(Long id) throws Exception {
+
+        Orders order = orderMapper.getById(id);
+
+        //判断订单是不是存在的
+        if (order == null) {
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+
+        //订单状态 1待付款 2待接单 3已接单 4派送中 5已完成 6已取消
+        // 如果大于二了要给商家打电话沟通 由商家取消
+        if (order.getStatus() > 2) {
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+
+        // 订单处于待接单状态下取消，需要进行退款
+        if (order.getStatus().equals(Orders.TO_BE_CONFIRMED)) {
+            //调用微信支付退款接口
+
+            //因为没有弄微信支付 所以直接跳过
+//            weChatPayUtil.refund(
+//                    order.getNumber(), //商户订单号
+//                    order.getNumber(), //商户退款单号
+//                    new BigDecimal(0.01),//退款金额，单位 元
+//                    new BigDecimal(0.01));//原订单金额
+
+            //支付状态修改为 退款
+            order.setPayStatus(Orders.REFUND);
+        }
+
+        order.setStatus(Orders.CANCELLED);
+        order.setCancelReason("用户取消");
+        order.setCancelTime(LocalDateTime.now());
+        orderMapper.update(order);
+    }
+
+    @Override
+    public OrderVO selectOrdersById(Long id) {
+
+        Orders order = orderMapper.getById(id);
+        List<OrderDetail> orderDetails = orderDetailMapper.getByOrderId(id);
+
+        OrderVO orderVO =new OrderVO();
+        BeanUtils.copyProperties(order,orderVO);
+        orderVO.setOrderDetailList(orderDetails);
+
+
+
+        return orderVO;
     }
 
 }

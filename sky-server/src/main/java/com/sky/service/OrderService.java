@@ -1,6 +1,7 @@
 package com.sky.service;
 
 import com.sky.dto.*;
+import com.sky.entity.Orders;
 import com.sky.result.PageResult;
 import com.sky.vo.*;
 
@@ -31,4 +32,8 @@ public interface OrderService {
     void reptition(Long id);
 
     PageResult pageQuery4User(int page, int pageSize, Integer status);
+
+    void cancel(Long id) throws Exception;
+
+    OrderVO selectOrdersById(Long id);
 }
