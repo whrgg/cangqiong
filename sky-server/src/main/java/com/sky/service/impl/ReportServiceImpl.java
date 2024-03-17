@@ -1,13 +1,13 @@
 package com.sky.service.impl;
 
+import com.sky.dto.GoodsSalesDTO;
 import com.sky.entity.Orders;
 import com.sky.mapper.OrderMapper;
-import com.sky.result.Result;
 import com.sky.service.ReportService;
 import com.sky.vo.OrderReportVO;
+import com.sky.vo.SalesTop10ReportVO;
 import com.sky.vo.TurnoverReportVO;
 import com.sky.vo.UserReportVO;
-import io.swagger.models.auth.In;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ReportServiceImpl implements ReportService {
@@ -131,6 +132,34 @@ public class ReportServiceImpl implements ReportService {
                 .totalOrderCount(totalOrderCount)
                 .validOrderCount(ComOrderCount)
                 .orderCompletionRate(orderCompletionRate)
+                .build();
+    }
+
+
+    /**
+     * 获取前十的热销产品
+     * @return
+     */
+    @Override
+    public SalesTop10ReportVO getSales10Report(LocalDate begin, LocalDate end) {
+
+        List<LocalDate> dateLists = new ArrayList<>();
+        LocalDateTime beginTime = LocalDateTime.of(begin, LocalTime.MIN);
+        LocalDateTime endTime = LocalDateTime.of(end, LocalTime.MAX);
+        List<GoodsSalesDTO> top10 = orderMapper.getTop10(beginTime, endTime);
+
+        String nameList = StringUtils.join(top10.stream().map(item -> {
+            return item.getName();
+        }).collect(Collectors.toList()), ",");
+
+        String numberList = StringUtils.join(top10.stream()
+                .map(GoodsSalesDTO::getNumber)
+                .collect(Collectors.toList()), ",");
+
+
+        return SalesTop10ReportVO.builder()
+                .nameList(nameList)
+                .numberList(numberList)
                 .build();
     }
 
