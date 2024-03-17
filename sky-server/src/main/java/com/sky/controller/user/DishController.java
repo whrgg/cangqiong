@@ -18,7 +18,6 @@ import java.util.List;
 @RestController("userDishController")
 @RequestMapping("/user/dish")
 @Slf4j
-@Api(tags = "C端-菜品浏览接口")
 public class DishController {
     @Autowired
     private DishService dishService;
@@ -32,7 +31,6 @@ public class DishController {
      * @return
      */
     @GetMapping("/list")
-    @ApiOperation("根据分类id查询菜品")
     public Result<List<DishVO>> list(Long categoryId) {
         Dish dish = new Dish();
         dish.setCategoryId(categoryId);

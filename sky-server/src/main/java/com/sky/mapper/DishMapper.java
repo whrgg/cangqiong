@@ -51,4 +51,6 @@ public interface DishMapper {
      */
     Integer countByMap(Map map);
 
+    @Select("select *from dish where category_id = #{categoryId}")
+    List<Dish> getByCategoryId(Integer categoryId);
 }

@@ -6,6 +6,8 @@ import com.sky.entity.Setmeal;
 import com.sky.result.PageResult;
 import com.sky.vo.DishItemVO;
 import com.sky.vo.SetmealVO;
+import io.swagger.models.auth.In;
+
 import java.util.List;
 
 public interface SetmealService {
@@ -24,4 +26,16 @@ public interface SetmealService {
      */
     List<DishItemVO> getDishItemById(Long id);
 
+    void save(SetmealDTO setmealDTO);
+
+    PageResult pageQuery(SetmealPageQueryDTO queryDTO);
+
+
+    void updateStatus(Integer status,Long id);
+
+    void delete(List<Long> ids);
+
+    SetmealVO getSetmealVoById(Long id);
+
+    void update(SetmealDTO setmealDTO);
 }

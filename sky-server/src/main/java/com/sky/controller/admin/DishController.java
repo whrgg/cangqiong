@@ -5,6 +5,7 @@ import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.exception.UserNotLoginException;
+import com.sky.mapper.DishMapper;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.DishService;
@@ -95,6 +96,13 @@ public class DishController {
         redisTemplate.delete(keys);
 
         return Result.success();
+    }
+
+    @GetMapping("/list")
+    public Result<List<Dish>> listDish(Integer categoryId){
+
+
+        return Result.success(service.getDishsByCategoryId(categoryId));
     }
 
 }
